@@ -1,7 +1,7 @@
 Flask==2.0.1
 requests==2.26.0
-PyMuPDF==1.18.11
 Werkzeug==2.0.1
 PyPDF2==1.26.0  # Corrected the version number
-reportlab==3.5.68
+PyMuPDF==1.18.11 --install-option="--install-scripts=/app/.heroku/python/bin"
+reportlab==3.5.68 --install-option="--install-scripts=/app/.heroku/python/bin"
 flask-ngrok==0.0.25
