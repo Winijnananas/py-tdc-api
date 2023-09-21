@@ -146,7 +146,7 @@ def add_watermark_with_date(input_pdf_path, output_pdf_path):
     can = canvas.Canvas(packet)
 
     # Set the font and size for the watermark
-    can.setFont('Helvetica', 36)
+    can.setFont('Helvetica-Oblique', 80)  # Change to italic font and adjust size if needed
     can.setFillGray(0.5, 0.5)
 
     # Get the current date
@@ -154,6 +154,11 @@ def add_watermark_with_date(input_pdf_path, output_pdf_path):
 
     # Add the date as the watermark
     can.drawCentredString(300, 400, current_date)
+
+    # Add "Download from TDC WU" below the date
+    can.setFont('Helvetica', 40)
+    can.drawCentredString(300, 300, "Download from TDC WU")
+
     can.save()
 
     # Move to the beginning of the BytesIO stream
@@ -165,13 +170,15 @@ def add_watermark_with_date(input_pdf_path, output_pdf_path):
 
     for i in range(len(existing_pdf.pages)):
         page = existing_pdf.pages[i]
-        page.mergePage(PdfReader(packet).getPage(0))
-        output_pdf.addPage(page)
+        page.merge_page(PdfReader(packet).pages[0])
+        output_pdf.add_page(page)
 
     # Write the watermarked PDF to the output path
     with open(output_pdf_path, "wb") as outputStream:
         output_pdf.write(outputStream)
 
+
+    
 # Endpoint for downloading watermarked PDF with a date watermark
 @app.route('/download_watermarked_with_date/<filename>', methods=['GET'])
 def download_watermarked_with_date(filename):
@@ -218,6 +225,6 @@ if __name__ == "__main__":
         
     #     status_code = send_to_solr(extract_text)
     #     print("Solr Status code for","Upload Success",master_files,":",status_code)
-        
+    # process_all_master_files()
     app.run(port=PORT, debug=True)
     

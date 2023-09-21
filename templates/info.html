@@ -100,27 +100,26 @@
                     </td>
                 </tr>
 
-                        <!-- PDF Modal -->
-                        <div class="modal fade" id="pdfModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-xl" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="pdfModalLabel">PDF Preview</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <iframe class="pdf-preview" src="{{ url_for('view_pdf', filename=document_info['File Name']) }}"></iframe>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
+                <!-- PDF Modal -->
+                <div class="modal fade" id="pdfModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="pdfModalLabel">PDF Preview</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe class="pdf-preview" src="{{ url_for('view_pdf', filename=document_info['File Name']) }}"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
-                    </td>
-                </tr>
+                    </div>
+                </div>
+
                 {% endfor %}
             </tbody>
         </table>
@@ -128,23 +127,29 @@
 
     <script>
         function generateDownloadLink(filename) {
-            // Generate a link to download the watermarked PDF
-            const downloadLink = `/download_watermarked_with_date/${filename}`;
+            const expirationDate = new Date();  // Get the current date and time
+            expirationDate.setSeconds(expirationDate.getSeconds() + 20);  // Set expiration 2 minutes (120 seconds) from now
         
-            // Open the download link in a new tab
-            // window.open(downloadLink, '_blank');
-            
+            // Check if the link is still valid
+            if (new Date() > expirationDate) {
+                alert('The download link has expired.');
+                return;
+            }
+        
+            // Generate a link to download the watermarked PDF with the expiration date
+            const formattedDate = expirationDate.toISOString().split('T')[0];  // Format the date as YYYY-MM-DD
+            const downloadLink = `/download_watermarked_with_date/${filename}?expiry=${formattedDate}`;
+        
             // Make an AJAX request to trigger the download
             var xhr = new XMLHttpRequest();
             xhr.open("GET", downloadLink, true);
             xhr.responseType = "blob";
             xhr.onload = function () {
                 if (xhr.status === 200) {
-                    // Create a link element and trigger the download
                     var blob = new Blob([xhr.response], { type: "application/pdf" });
                     var link = document.createElement("a");
                     link.href = window.URL.createObjectURL(blob);
-                    link.download = `${filename}_watermarked.pdf`; // Set the desired filename
+                    link.download = `${filename}.pdf`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
