@@ -128,7 +128,7 @@
     <script>
         function generateDownloadLink(filename) {
             const expirationDate = new Date();  // Get the current date and time
-            expirationDate.setSeconds(expirationDate.getSeconds() + 20);  // Set expiration 2 minutes (120 seconds) from now
+            expirationDate.setSeconds(expirationDate.getSeconds() + 10);  // Set expiration 2 minutes (120 seconds) from now
         
             // Check if the link is still valid
             if (new Date() > expirationDate) {

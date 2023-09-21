@@ -4,10 +4,12 @@ import fitz  # PyMuPDF
 import os
 from os import listdir, path
 from werkzeug.utils import secure_filename
-from PyPDF2 import PdfFileReader, PdfFileWriter
+from PyPDF2 import PdfReader, PdfWriter
 from datetime import datetime
 from reportlab.pdfgen import canvas
 from io import BytesIO
+from flask_ngrok import run_with_ngrok  # Import run_with_ngrok
+import logging
 
 PDF_FOLDER = r'D:\TDCReview\py-tdc-api\pdf_files'
 SOLR_URL = 'http://localhost:8983/solr/tdc_data_core/update?commit=true'
@@ -15,6 +17,7 @@ SOLR_FIELD = 'text_field'  # Solr field to store text
 PDF_FOLDER = r'D:\TDCReview\py-tdc-api\pdf_files'
 MASTER_FILE_FOLDER = r'D:\TDCReview\py-tdc-api\master_files'
 app = Flask(__name__)
+run_with_ngrok(app)  # Start ngrok when the app is run
 PORT = 3000  # หรือพอร์ตที่คุณต้องการ
 
 # Endpoint Home
@@ -30,8 +33,10 @@ def upload_file(folder):
         filename = secure_filename(uploaded_file.filename)
         file_path = os.path.join(folder, filename)
         uploaded_file.save(file_path)
+        logging.info('File uploaded successfully: %s', file_path)
         return file_path
     else:
+        logging.error('Failed to upload file: No filename provided')
         return None
 
 # Endpoint to display document information in master_files folder
@@ -101,9 +106,12 @@ def send_to_solr(text):
     return response.status_code
 
 # Endpoint for searching documents
+# Endpoint for searching documents
 @app.route('/search_page')
 def search_page():
-    return render_template('search.html')
+    # List all PDF files in the specified folder (master_files)
+    pdf_files = [file for file in os.listdir(MASTER_FILE_FOLDER) if file.lower().endswith('.pdf')]
+    return render_template('search.html', pdf_files=pdf_files)
 
 # Endpoint สำหรับเรียก Solr API เพื่อค้นหา
 @app.route('/search', methods=['GET'])
@@ -165,12 +173,12 @@ def add_watermark_with_date(input_pdf_path, output_pdf_path):
     packet.seek(0)
 
     # Create a new PDF with the watermark
-    existing_pdf = PdfFileReader(open(input_pdf_path, "rb"))
-    output_pdf = PdfFileWriter()
+    existing_pdf = PdfReader(open(input_pdf_path, "rb"))
+    output_pdf = PdfWriter()
 
     for i in range(len(existing_pdf.pages)):
         page = existing_pdf.pages[i]
-        page.merge_page(PdfFileReader(packet).pages[0])
+        page.merge_page(PdfReader(packet).pages[0])
         output_pdf.add_page(page)
 
     # Write the watermarked PDF to the output path
@@ -226,5 +234,6 @@ if __name__ == "__main__":
     #     status_code = send_to_solr(extract_text)
     #     print("Solr Status code for","Upload Success",master_files,":",status_code)
     # process_all_master_files()
-    app.run(port=PORT, debug=True)
+    # app.run(port=PORT, debug=True)
+    app.run()
     

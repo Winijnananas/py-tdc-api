@@ -53,8 +53,12 @@
         <h1 class="my-4">Search Documents</h1>
         <form id="searchForm">
             <div class="form-group">
-                <label for="searchInput">Search for a Document</label>
-                <input type="text" class="form-control" id="searchInput" placeholder="Enter document name">
+                <label for="searchInput">Select a Document</label>
+                <select class="form-control" id="documentDropdown">
+                    {% for pdf_file in pdf_files %}
+                        <option value="{{ pdf_file }}">{{ pdf_file }}</option>
+                    {% endfor %}
+                </select>
             </div>
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
@@ -66,27 +70,34 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
         const searchForm = document.getElementById('searchForm');
-        const searchInput = document.getElementById('searchInput');
+        const documentDropdown = document.getElementById('documentDropdown');
         const searchResultsDiv = document.getElementById('searchResults');
 
         searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const searchQuery = searchInput.value;
-            const encodedSearchQuery = encodeURIComponent(searchQuery);
-            const searchUrl = `/search?query=${encodedSearchQuery}`;  // Update with your API endpoint
+            const selectedDocument = documentDropdown.value;
+            const encodedSelectedDocument = encodeURIComponent(selectedDocument);
+            const searchUrl = `/search?text_field=${encodedSelectedDocument}`;  // Update with your API endpoint
 
             fetch(searchUrl)
                 .then(response => response.json())
                 .then(data => {
                     searchResultsDiv.innerHTML = '';  // Clear previous search results
 
-                    if (data.documents && data.documents.length > 0) {
-                        data.documents.forEach(document => {
-                            const documentDiv = document.createElement('div');
-                            documentDiv.innerHTML = `<p>Document ID: ${document.id}</p>`;
-                            searchResultsDiv.appendChild(documentDiv);
+                    if (data && data.response && data.response.docs.length > 0) {
+                        const docs = data.response.docs;
+                        const resultList = document.createElement('ul');
+                        resultList.className = 'list-group';
+
+                        docs.forEach(doc => {
+                            const listItem = document.createElement('li');
+                            listItem.className = 'list-group-item';
+                            listItem.innerText = doc['File Name'][0];
+                            resultList.appendChild(listItem);
                         });
+
+                        searchResultsDiv.appendChild(resultList);
                     } else {
                         searchResultsDiv.innerHTML = '<p>No results found.</p>';
                     }

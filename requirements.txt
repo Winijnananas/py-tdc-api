@@ -1,5 +1,7 @@
 Flask==2.0.1
 requests==2.26.0
-PyMuPDF==1.18.14
+PyMuPDF==1.18.11
+Werkzeug==2.0.1
 PyPDF2==1.26.0
-reportlab==3.6.1
+reportlab==3.5.68
+flask-ngrok==0.0.25
