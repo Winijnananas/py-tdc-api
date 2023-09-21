@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload - Master</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap');
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
+
+        #response {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+            TDC WU
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Upload Master File</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/document_info">Document Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/search_page">Search Documents</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="my-4">Upload Master File</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="fileInput">Select Master File</label>
+                <input type="file" class="form-control-file" name="file" id="fileInput">
+            </div>
+            <button type="submit" class="btn btn-success" data-toggle="modal" data-target="#uploadStatusModal">Upload</button>
+            <button type="submit" class="btn btn-primary" data-toggle="modal" onclick="uploadAndProcess()">Upload and Process PDFs</button>
+        </form>
+    </div>
+
+    <!-- Upload Status Modal -->
+    <div class="modal fade" id="uploadStatusModal" tabindex="-1" role="dialog" aria-labelledby="uploadStatusModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadStatusModalLabel">Upload Status</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="response" class="text-center">Waiting for upload...</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function uploadAndProcess() {
+            // You can perform file upload here if needed
+            // Then call the Python function to process the files
+            fetch('/process_master_files')  // This assumes you have a route to trigger the Python function
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        const form = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('fileInput');
+        const responseDiv = document.getElementById('response');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            $('#uploadStatusModal').modal('show');  // Show the upload status modal
+
+            fetch('/upload_master', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                $('#uploadStatusModal').modal('hide');  // Hide the upload status modal
+                responseDiv.innerHTML = `<p>${data.message}</p>`;
+            })
+            .catch(error => console.error('Error uploading Master File:', error));
+        });
+    </script>
+</body>
+</html>

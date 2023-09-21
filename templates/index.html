@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 50px;
+        }
+
+        .menu-container {
+            max-width: 400px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu-item {
+            margin-bottom: 10px;
+        }
+
+        .menu-item a {
+            display: block;
+            padding: 10px;
+            font-size: 18px;
+            text-decoration: none;
+            color: #007BFF;
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 5px;
+        }
+
+        .menu-item a:hover {
+            background-color: #f0f0f0;
+            color: #0056b3;
+        }
+
+        .menu-item a i {
+            margin-right: 10px;
+        }
+
+        .menu-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <div class="menu-header">Menu</div>
+        <ul class="menu">
+            <li class="menu-item"><a href="/upload_master_page"><i class="fas fa-upload"></i> Upload Master File</a></li>
+            <li class="menu-item"><a href="/document_info"><i class="fas fa-file-alt"></i> Document Information</a></li>
+            <li class="menu-item"><a href="/search"><i class="fas fa-search"></i> Solr Search</a></li>
+            <li class="menu-item"><a href="/search_page"><i class="fas fa-search"></i> Search Documents</a></li>
+        </ul>
+    </div>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+</html>
