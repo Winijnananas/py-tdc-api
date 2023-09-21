@@ -4,7 +4,7 @@ import fitz  # PyMuPDF
 import os
 from os import listdir, path
 from werkzeug.utils import secure_filename
-from PyPDF2 import PdfReader, PdfWriter
+from PyPDF2 import PdfFileReader, PdfFileWriter
 from datetime import datetime
 from reportlab.pdfgen import canvas
 from io import BytesIO
