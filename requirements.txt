@@ -2,6 +2,6 @@ Flask==2.0.1
 requests==2.26.0
 PyMuPDF==1.18.11
 Werkzeug==2.0.1
-PyPDF2==3..0.0
+PyPDF2==1.26.0  # Corrected the version number
 reportlab==3.5.68
 flask-ngrok==0.0.25
