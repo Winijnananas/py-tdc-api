@@ -228,12 +228,15 @@
 #     # process_all_master_files()
 #     app.run(port=PORT, debug=True)
 from flask import Flask
+import os  # Import the os module
 
 app = Flask(__name__)
-PORT = 3000
+PORT = int(os.environ.get('PORT', 3000))  # Use the PORT provided by Heroku, or default to 3000
+
 @app.route('/')
 def hello():
     return 'hello test'
 
 if __name__ == '__main__':
-    app.run(debug=True,port=PORT)
+    app.run(debug=True, port=PORT)
+
