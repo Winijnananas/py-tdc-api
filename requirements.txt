@@ -4,5 +4,4 @@ PyMuPDF ==1.23.3
 reportlab>=3.0.0
 Werkzeug==2.0.1
 PyPDF2==1.26.0
-flask-ngrok==0.0.25
 pip==23.2.1

@@ -9,7 +9,6 @@ from PyPDF2 import PdfReader, PdfWriter
 from datetime import datetime
 from reportlab.pdfgen import canvas
 from io import BytesIO
-from flask_ngrok import run_with_ngrok  # Import run_with_ngrok
 import logging
 
 PDF_FOLDER = r'D:\TDCReview\py-tdc-api\pdf_files'
@@ -18,8 +17,8 @@ SOLR_FIELD = 'text_field'  # Solr field to store text
 PDF_FOLDER = r'D:\TDCReview\py-tdc-api\pdf_files'
 MASTER_FILE_FOLDER = r'D:\TDCReview\py-tdc-api\master_files'
 app = Flask(__name__)
-run_with_ngrok(app)  # Start ngrok when the app is run
-PORT = 3000  # หรือพอร์ตที่คุณต้องการ
+ # Start ngrok when the app is run
+PORT = 5000  # หรือพอร์ตที่คุณต้องการ
 
 # Endpoint Home
 @app.route('/')
@@ -235,6 +234,6 @@ if __name__ == "__main__":
     #     status_code = send_to_solr(extract_text)
     #     print("Solr Status code for","Upload Success",master_files,":",status_code)
     # process_all_master_files()
-    # app.run(port=PORT, debug=True)
-    app.run()
+    app.run(port=PORT, debug=True)
+    # app.run()
     
