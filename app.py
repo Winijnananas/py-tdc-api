@@ -4,7 +4,7 @@ import fitz  # PyMuPDF
 import os
 from os import listdir, path
 from werkzeug.utils import secure_filename
-from PyPDF2 import PdfFileReader, PdfFileWriter
+from PyPDF2 import PdfReader, PdfWriter
 from datetime import datetime
 from reportlab.pdfgen import canvas
 from io import BytesIO
@@ -165,12 +165,12 @@ def add_watermark_with_date(input_pdf_path, output_pdf_path):
     packet.seek(0)
 
     # Create a new PDF with the watermark
-    existing_pdf = PdfFileReader(open(input_pdf_path, "rb"))
-    output_pdf = PdfFileWriter()
+    existing_pdf = PdfReader(open(input_pdf_path, "rb"))
+    output_pdf = PdfWriter()
 
     for i in range(len(existing_pdf.pages)):
         page = existing_pdf.pages[i]
-        page.merge_page(PdfFileReader(packet).pages[0])
+        page.merge_page(PdfReader(packet).pages[0])
         output_pdf.add_page(page)
 
     # Write the watermarked PDF to the output path
